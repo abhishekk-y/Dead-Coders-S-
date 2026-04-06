@@ -1,0 +1,35 @@
+# LogSentinel Pro v4.0 - Enterprise SIEM Platform (Industry Share Edition)
+# Install with: pip install -r requirements.txt
+
+# Essential Dependencies
+rich>=13.0.0                 # Beautiful terminal interfaces and animations
+PyYAML>=6.0                  # Configuration management system
+
+# Email & Alerting (v4.0 NEW)
+sendgrid>=6.10.0             # Professional email delivery via SendGrid
+python-dotenv>=1.0.0         # Environment variable management for secrets
+
+# Dashboard & Web Interface (v4.0 NEW)
+flask>=2.3.0                 # Web framework for dashboard
+flask-cors>=4.0.0            # CORS support for API
+flask-socketio>=5.3.0        # Real-time WebSocket support
+python-socketio>=5.9.0       # Socket.IO library
+python-engineio>=4.7.0       # Engine.IO protocol
+
+# Premium Features (for enhanced functionality)
+matplotlib>=3.5.0            # Chart generation for PDF reports
+numpy>=1.21.0                # Mathematical operations for ML analysis
+reportlab>=3.6.0             # Professional PDF report generation
+
+# v4.0 Industry Share (optional - enhanced encryption)
+# cryptography>=41.0.0       # AES-256-GCM encryption (falls back to HMAC-SHA256)
+
+# Original Dependencies (maintained for compatibility)
+psutil>=5.8.0                # System monitoring and process management
+jsonschema>=4.0.0            # JSON configuration validation
+certifi>=2022.0.0            # HTTPS certificate validation
+
+# Development Dependencies (optional)
+# pytest>=7.0.0              # Testing framework
+# black>=22.0.0              # Code formatting
+# flake8>=5.0.0              # Code linting

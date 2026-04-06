@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# LogSentinel Pro - Enterprise SIEM Platform  
+# Admin CLI Executable
+#
+
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+# Set up Python path to include engines
+export PYTHONPATH="${SCRIPT_DIR}/src/engines:${SCRIPT_DIR}/src/cli:${PYTHONPATH}"
+
+# Activate virtual environment if available
+if [ -d "${SCRIPT_DIR}/venv_premium" ]; then
+    source "${SCRIPT_DIR}/venv_premium/bin/activate" 2>/dev/null || true
+fi
+
+# Change to script directory to ensure relative paths work
+cd "${SCRIPT_DIR}"
+
+# Execute the admin CLI with all arguments
+exec python3 src/cli/logsentinel_admin.py "$@"
