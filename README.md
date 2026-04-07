@@ -59,6 +59,56 @@ LogSentinel Pro is a **next-generation security operations framework** — not j
 
 ---
 
+## 📸 Screenshots & Live Demo
+
+### 🖥️ Main Live Threat Dashboard
+Real-time threat detection with live metrics, event stream, and threat correlation:
+- **Threat Level Visualization** — Live threat score (0-100)
+- **Event Metrics** — Parsed events, threats detected, severity breakdown
+- **Live Log Stream** — Real-time log ingestion with threat highlighting
+- **Detected Threats Table** — Severity, type, MITRE ATT&CK mapping, details
+
+![Live Threat Dashboard](assets/dashboard_live_threats.jpeg)
+*LogSentinel Pro monitoring 100+ threat events with real-time detection*
+
+---
+
+### 🔐 Admin Console & Authentication
+Secure administrative interface with license management and command center:
+- **Authentication** — Role-based access control (Admin authentication required)
+- **License Management** — Generate, track, and manage sensor licenses
+- **Admin Command Center** — Generate OMG, patch counts, stats, audit logs
+- **Security Notice** — Unauthorized access logging and prevention
+
+![Admin Console](assets/admin_console.jpeg)
+*Admin dashboard with license key generation and command center*
+
+---
+
+### 🤖 Threat Intelligence Bot (Zeta)
+AI-powered threat analysis with real-time incident correlation:
+- **Telemetry Analysis** — Failed login attempts, brute force detection
+- **Incident Correlation** — MITRE ATT&CK framework mapping (T1110.001, T1548.003)
+- **Actionable Alerts** — Block IP, investigate, or mark as false positive
+- **SIEM Integration** — LogSentinel Pro threat tickets auto-created
+
+![Threat Intelligence Bot](assets/threat_bot_zeta.jpeg)
+*Zeta bot detecting brute force attack (10.0.0.66) with MITRE mapping*
+
+---
+
+### ⚡ Attack Simulation & Live Monitoring
+Full attack chain detection across 7 cyber kill chain phases:
+- **183 Critical Threats Detected** — High-severity events across network
+- **Top Attackers** — IP-based threat actor tracking
+- **Attack Types** — Port scanning, privilege escalation, data exfiltration
+- **Attack Simulation** — Complete cyber kill chain (all 7 phases)
+
+![Attack Simulation Results](assets/attack_simulation.jpeg)
+*LogSentinel Pro detecting and simulating full ransomware attack chain*
+
+---
+
 ## ✨ Core Features (MVP)
 
 ### Phase 1: Foundation (24-Hour MVP)
@@ -101,29 +151,225 @@ Anomaly detection, behavioral analysis, and predictive threat scoring using prop
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ System Architecture & Workflows
 
-### High-Level Pipeline
+### Complete Data Flow Architecture
 
+*Universal log processing pipeline: 7+ log sources → Smart router → 6 specialized detection pipelines → ML ensemble → MITRE tagger → Blockchain anchor → SOAR response → Unified dashboard*
+
+---
+
+### Threat Detection Pipeline
+
+```mermaid
+sequenceDiagram
+    participant Log as Log Event
+    participant Parser as Parser
+    participant DB as Database
+    participant HD as Heuristic Detection
+    participant ML as ML Anomaly
+    participant CVE as CVE Analyzer
+    participant ATK as Threat Recognizer
+    participant NIDS as NIDS Engine
+    participant Score as Scorer
+    participant Alert as Alert Manager
+
+    Log->>Parser: Raw text (any format)
+    Parser->>Parser: Auto-detect & parse
+    Parser->>DB: Normalize & store
+    
+    par Parallel Detection
+        HD->>HD: Pattern matching
+        ML->>ML: Behavioral analysis
+        CVE->>CVE: CVE correlation
+        ATK->>ATK: MITRE ATT&CK map
+        NIDS->>NIDS: Traffic analysis
+    end
+    
+    HD->>Score: Risk score 0-100
+    ML->>Score: Anomaly probability
+    CVE->>Score: Vuln severity
+    ATK->>Score: Threat actor ID
+    NIDS->>Score: Network risk
+    
+    Score->>Score: Aggregate & weight
+    Score->>Alert: Final risk score
+    
+    alt Risk > 85 CRITICAL
+        Alert->>Alert: CRITICAL
+    else Risk 60-85 HIGH
+        Alert->>Alert: HIGH
+    else Risk 40-60 MEDIUM
+        Alert->>Alert: MEDIUM
+    else Risk < 40 LOW
+        Alert->>Alert: LOW
+    end
 ```
-Input Logs → Parser → Enrichment → Detection Engines → Scoring → Alerting → Dashboard
-                                         ↓
-                                    ML Anomaly
-                                   CVE Analyzer
-                                  Threat Intel
-                                  Rule Engine
+
+---
+
+### Alert Routing & Response Workflow
+
+```mermaid
+flowchart TD
+    A["Threat Detected<br/>Risk Score Calculated"] --> B{Risk Level?}
+    
+    B -->|CRITICAL 85-100| D["CRITICAL THREAT"]
+    B -->|HIGH 60-85| E["HIGH THREAT"]
+    B -->|MEDIUM 40-60| F["MEDIUM THREAT"]
+    B -->|LOW 0-40| G["INFO EVENT"]
+    
+    D --> D1["SendGrid Email"]
+    D --> D2["Telegram Alert"]
+    D --> D3["Dashboard Notification"]
+    D --> D4["SOAR Auto-Response"]
+    D -->|Block IP/Revoke Token| D5["Containment"]
+    
+    E --> E1["Email Alert"]
+    E --> E2["Dashboard Alert"]
+    
+    F --> F1["Dashboard Only"]
+    
+    G --> G1["Log Storage"]
+    
+    D1 --> H["Live Dashboard<br/>Real-Time Updates"]
+    D2 --> H
+    D3 --> H
+    D4 --> H
+    E1 --> H
+    E2 --> H
+    F1 --> H
+    G1 --> I["Generate Reports"]
+    
+    H --> I
+    I --> J["MITRE ATT&CK Timeline"]
+    J --> K["Blockchain Anchor"]
+    K --> L["Incident Closed"]
+    
+    style D fill:#FF3838,stroke:#c0392b,color:#fff
+    style E fill:#FFD700,stroke:#ff8f00,color:#000
+    style F fill:#FFC700,stroke:#ff6f00,color:#000
+    style G fill:#00ff9d,stroke:#00cc7d,color:#000
+    style D5 fill:#FF0000,stroke:#990000,color:#fff
 ```
 
-### Core Components
+---
 
-| Component | Role | Technology |
-|-----------|------|-----------|
-| **Log Ingester** | Collect logs from multiple sources | Syslog, REST API |
-| **Parser** | Normalize and structure log data | Python regex |
-| **Detection Engine** | Analyze logs for threats | ML + Heuristics |
-| **Alert Manager** | Route alerts to channels | SendGrid, Telegram, Email |
-| **Dashboard** | Real-time monitoring UI | Web interface |
-| **Database** | Persistent storage | SQLite |
+### Real-Time Monitoring Loop
+
+```mermaid
+flowchart TD
+    A["Start"] --> B["Idle"]
+    B --> C["Timer: Every 5s"]
+    C --> D["Scanning: Ingest logs"]
+    D --> E["Parsing: Normalize & enrich"]
+    E --> F["Detection: Run engines"]
+    F --> G["Correlation: Analyze"]
+    G --> H["Analysis: ML scoring"]
+    H --> I["Scoring: Aggregate signals"]
+    I --> J{Risk Exceeded?}
+    
+    J -->|No| K["Logging: Store SQLite"]
+    J -->|Yes| L["MITRE: Tag ATT&CK"]
+    
+    K --> B
+    L --> M["BlockChain: Anchor"]
+    M --> N["Alert: Trigger pipeline"]
+    N --> O["Dispatch: Route channels"]
+    O --> P["Dashboard: WebSocket"]
+    P --> Q["Reporting: Generate"]
+    Q --> R["Archive: Long-term"]
+    R --> B
+    
+    style A fill:#00ff9d,stroke:#00cc7d,color:#000
+    style J fill:#FFD700,stroke:#ff8f00,color:#000
+    style L fill:#FF3838,stroke:#c0392b,color:#fff
+    style P fill:#00D2FF,stroke:#0099cc,color:#000
+    style R fill:#9D00FF,stroke:#7a0080,color:#fff
+```
+
+---
+
+### Log Processing Workflow
+
+```mermaid
+graph TB
+    subgraph INPUT["Input Stage"]
+        I1["Syslog Server"]
+        I2["REST API/Webhook"]
+        I3["File Monitor"]
+        I4["Network Tap"]
+    end
+    
+    subgraph PROCESS["Processing Stage"]
+        P1["Log Parser"]
+        P2["Data Normalizer"]
+        P3["Enrichment Engine"]
+        P4["Field Extractor"]
+    end
+    
+    subgraph DETECT["Detection Stage"]
+        D1["Heuristics"]
+        D2["ML Anomalies"]
+        D3["CVE Database"]
+        D4["MITRE Mapping"]
+        D5["NIDS Rules"]
+    end
+    
+    subgraph RESPOND["Response Stage"]
+        R1["Alert Manager"]
+        R2["Email Channel"]
+        R3["Telegram Channel"]
+        R4["Dashboard Stream"]
+    end
+    
+    subgraph OUTPUT["Output Stage"]
+        O1["SQLite Database"]
+        O2["Live Dashboard"]
+        O3["PDF Reports"]
+        O4["SIEM Feed"]
+    end
+    
+    I1 --> P1
+    I2 --> P1
+    I3 --> P1
+    I4 --> P1
+    
+    P1 --> P2
+    P2 --> P3
+    P3 --> P4
+    
+    P4 --> O1
+    P4 --> D1
+    P4 --> D2
+    P4 --> D3
+    P4 --> D4
+    P4 --> D5
+    
+    D1 --> R1
+    D2 --> R1
+    D3 --> R1
+    D4 --> R1
+    D5 --> R1
+    
+    R1 --> R2
+    R1 --> R3
+    R1 --> R4
+    
+    O1 --> O2
+    O1 --> O3
+    O1 --> O4
+    
+    R2 --> O2
+    R3 --> O2
+    R4 --> O2
+    
+    style INPUT fill:#00D2FF,stroke:#0099cc,color:#000
+    style PROCESS fill:#FFD700,stroke:#ff8f00,color:#000
+    style DETECT fill:#FF3838,stroke:#c0392b,color:#fff
+    style RESPOND fill:#00ff9d,stroke:#00cc7d,color:#000
+    style OUTPUT fill:#9D00FF,stroke:#7a0080,color:#fff
+```
 
 ---
 
